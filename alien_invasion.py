@@ -5,11 +5,14 @@ import pygame
 
 from settings import Settings
 
+from ship import Ship
+
 class AlienInvasion:
     """Creating a class that would manage all game attributes"""
     def __init__(self):
         """Creating a game object"""
         pygame.init()
+        #Create a Settings instance
         self.settings=Settings()
 
         #Creating overall game window
@@ -17,9 +20,12 @@ class AlienInvasion:
                                              self.settings.screen_height))
         #Creating text to be displayed
         pygame.display.set_caption("Alien Invasion")
+
         #Creating a class Clock object
         self.clock=pygame.time.Clock()
-        #Setting background colour
+
+        #Creating the Ship instance
+        self.ship=Ship(self)
 
     def run_game(self):
         """Creating a loop that will update the screen"""
@@ -29,6 +35,8 @@ class AlienInvasion:
                     sys.exit()
             #Redraw the screen with the appropriate filling
             self.screen.fill(self.settings.bg_color)
+            #Draws the ship
+            self.ship.blitme()
             #Draws new screen
             pygame.display.flip()
             #Keeps consistent framerate by ticking once through a loop
@@ -38,3 +46,4 @@ class AlienInvasion:
 if __name__=='__main__':
     ai=AlienInvasion()
     ai.run_game()
+
