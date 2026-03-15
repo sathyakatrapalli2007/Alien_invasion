@@ -7,6 +7,8 @@ from settings import Settings
 
 from ship import Ship
 
+from bullets import Bullet
+
 class AlienInvasion:
     """Creating a class that would manage all game attributes"""
     def __init__(self):
@@ -29,11 +31,15 @@ class AlienInvasion:
         #Creating the Ship instance
         self.ship=Ship(self)
 
+        #Creating the bullet group
+        self.bullets=pygame.sprite.Group()
+
     def run_game(self):
         """Creating a loop that will update the screen"""
         while True:
             self._check_events()
             self.ship.update()
+            self._update_bullets()
             self._update_screen()
             #Keeps consistent framerate by ticking once through a loop
             self.clock.tick(60)
@@ -58,6 +64,8 @@ class AlienInvasion:
              self.ship.moving_left=True
         elif event.key==pygame.K_q:
             sys.exit()
+        elif event.key==pygame.K_SPACE:
+            self._fire_bullet()
         
     def _check_keyup_events(self,event):
         """Deal with key releases"""
@@ -71,11 +79,27 @@ class AlienInvasion:
         """Updates the screen after every loop"""
         #Redraw the screen with the appropriate filling
         self.screen.fill(self.settings.bg_color)
+        #Draws the bullet
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
         #Draws the ship
         self.ship.blitme()
         #Draws new screen
         pygame.display.flip()
+
+    def _fire_bullet(self):
+        """Create the bullet instance"""
+        if len(self.bullets) < self.settings.bullets_allowed:
+            new_bullet=Bullet(self)
+            self.bullets.add(new_bullet)
             
+    def _update_bullets(self):
+        """Update the location of the bullet"""
+        self.bullets.update()
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom<=0:
+                self.bullets.remove(bullet)
+
     
 if __name__=='__main__':
     ai=AlienInvasion()

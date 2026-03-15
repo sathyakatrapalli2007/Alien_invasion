@@ -15,7 +15,6 @@ class Ship:
 
         #Start the new ship at the midbottom of screen
         self.rect.midbottom=self.screen_rect.midbottom
-        self.rect.y-=40
 
         #Store a float for the ship's exact horizontal position.
         self.x=float(self.rect.x)
