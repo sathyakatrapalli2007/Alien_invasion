@@ -3,7 +3,7 @@ import pygame
 from pygame.sprite import Sprite
 
 class Bullet(Sprite):
-    """A class that manages the bullets"""
+    """A class that manages one bullet"""
     def __init__(self,ai_game):
         """Initializes and creates a bullet"""
         super().__init__()

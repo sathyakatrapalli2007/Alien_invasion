@@ -10,7 +10,7 @@ class Ship:
 
         #Load the image and get its rect attribut
         self.image=pygame.image.load('images/ship1.bmp')
-        self.image= pygame.transform.smoothscale(self.image, (120, 96))
+        self.image= pygame.transform.smoothscale(self.image, (60, 48))
         self.rect=self.image.get_rect()
 
         #Start the new ship at the midbottom of screen

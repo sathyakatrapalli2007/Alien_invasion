@@ -13,3 +13,9 @@ class Settings:
         self.bullet_speed=2
         self.bullet_color=(237,18,132)
         self.bullets_allowed=5
+
+        #Alien Settings
+        self.alien_speed=1.0
+        self.fleet_dropdown_speed=10
+        #right=1, left=-1
+        self.fleet_direction=1
