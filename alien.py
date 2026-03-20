@@ -28,6 +28,7 @@ class Alien(Sprite):
         return (self.rect.right>=self.screen_rect.right) or (self.rect.left<=0)
 
     def update(self):
+        """Update the position of the aliens"""
         self.x+=self.settings.alien_speed*self.settings.fleet_direction
         self.rect.x=self.x
         
