@@ -15,6 +15,8 @@ from alien import Alien
 
 from game_stats import GameStats
 
+from button import Button
+
 class AlienInvasion:
     """Creating a class that would manage all game attributes"""
     def __init__(self):
@@ -47,8 +49,11 @@ class AlienInvasion:
         self.aliens=pygame.sprite.Group()
         self._create_fleet()
 
-        #Set the game flag
-        self.game_active=True
+        #Set the game flag in inactive state
+        self.game_active=False
+
+        #Set the button
+        self.play_button=Button(self,"PLAY")
 
     def run_game(self):
         """Creating a loop that will update the screen"""
@@ -104,6 +109,9 @@ class AlienInvasion:
         self.ship.blitme()
         #Draws the alien
         self.aliens.draw(self.screen)
+        #Draws the button only when game is inactive
+        if not self.game_active:
+            self.play_button.blitme()
         #Draws new screen
         pygame.display.flip()
 
@@ -123,6 +131,7 @@ class AlienInvasion:
         self._check_bullet_alien_collisions()
 
     def _check_bullet_alien_collisions(self):
+        """Check if there are any collisions and regenerates fleet if all aliens are shot down"""
         #check for any bullets that hit the alien and get rid of them
         collisions=pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
 
@@ -185,6 +194,7 @@ class AlienInvasion:
 
 
     def _ship_hit(self):
+        """Action to be taken when the alien collides with ship"""
         if self.stats.ships_left>0:
             #Decrement the number of ships left
             self.stats.ships_left-=1
