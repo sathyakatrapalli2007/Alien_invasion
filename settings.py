@@ -5,18 +5,29 @@ class Settings:
         self.screen_width=1200
         self.screen_height=800
         self.bg_color=(231,196,213)
-        self.ship_speed=1.5
         self.ship_limit=3
 
         #Bullet Settings
-        self.bullet_width=3
+        self.bullet_width=300
         self.bullet_height=15
-        self.bullet_speed=2.5
         self.bullet_color=(237,18,132)
         self.bullets_allowed=5
 
         #Alien Settings
-        self.alien_speed=1.0
         self.fleet_dropdown_speed=10
+        
+        self.increase_speed=1.1
+
+    def initialize_dynamic_settings(self):
+        self.ship_speed=1.5
+        self.bullet_speed=2.5
+        self.alien_speed=1.0
         #right=1, left=-1
         self.fleet_direction=1
+
+    def speed_up(self):
+        self.ship_speed*=self.increase_speed
+        self.bullet_speed*=self.increase_speed
+        self.alien_speed*=self.increase_speed
+        #right=1, left=-1
+        self.fleet_direction*=self.increase_speed

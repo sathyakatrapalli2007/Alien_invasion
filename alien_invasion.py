@@ -89,6 +89,7 @@ class AlienInvasion:
 
     def _start_game(self):
         self.stats.reset_settings()
+        self.settings.initialize_dynamic_settings()
         self.game_active=True
 
         #Clear all bullets and aliens
@@ -164,6 +165,7 @@ class AlienInvasion:
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
+            self.settings.speed_up()
 
     def _create_fleet(self):
         """Creates alien fleets"""
