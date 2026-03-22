@@ -17,6 +17,8 @@ from game_stats import GameStats
 
 from button import Button
 
+from scoreboard import ScoreBoard
+
 class AlienInvasion:
     """Creating a class that would manage all game attributes"""
     def __init__(self):
@@ -36,6 +38,9 @@ class AlienInvasion:
         #Initialize game statistics
         self.stats=GameStats(self)
 
+        #Create the score board
+        self.score=ScoreBoard(self)
+
         #Creating a class Clock object
         self.clock=pygame.time.Clock()
 
@@ -54,6 +59,7 @@ class AlienInvasion:
 
         #Set the button
         self.play_button=Button(self,"PLAY")
+
 
     def run_game(self):
         """Creating a loop that will update the screen"""
@@ -88,7 +94,9 @@ class AlienInvasion:
                 self._start_game()
 
     def _start_game(self):
+        """Reset everything and start game"""
         self.stats.reset_settings()
+        self.score.prep_score()
         self.settings.initialize_dynamic_settings()
         self.game_active=True
 
@@ -135,6 +143,8 @@ class AlienInvasion:
         self.ship.blitme()
         #Draws the alien
         self.aliens.draw(self.screen)
+        #Draws the scoreboard
+        self.score.show_score()
         #Draws the button only when game is inactive
         if not self.game_active:
             self.play_button.blitme()
@@ -161,11 +171,18 @@ class AlienInvasion:
         #check for any bullets that hit the alien and get rid of them
         collisions=pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
 
+        #update score
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score+=self.settings.alien_points*len(aliens)
+            self.score.prep_score()
+
         #Generate a new fleet when the old one dies
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
             self.settings.speed_up()
+
 
     def _create_fleet(self):
         """Creates alien fleets"""
