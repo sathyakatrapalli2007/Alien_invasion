@@ -39,7 +39,7 @@ class AlienInvasion:
         self.stats=GameStats(self)
 
         #Create the score board
-        self.score=ScoreBoard(self)
+        self.sb=ScoreBoard(self)
 
         #Creating a class Clock object
         self.clock=pygame.time.Clock()
@@ -144,7 +144,7 @@ class AlienInvasion:
         #Draws the alien
         self.aliens.draw(self.screen)
         #Draws the scoreboard
-        self.score.show_score()
+        self.sb.show_score()
         #Draws the button only when game is inactive
         if not self.game_active:
             self.play_button.blitme()
@@ -175,13 +175,14 @@ class AlienInvasion:
         if collisions:
             for aliens in collisions.values():
                 self.stats.score+=self.settings.alien_points*len(aliens)
-            self.score.prep_score()
-
+            self.sb.prep_score()
+            self.sb.check_high_score()
         #Generate a new fleet when the old one dies
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
             self.settings.speed_up()
+
 
 
     def _create_fleet(self):
