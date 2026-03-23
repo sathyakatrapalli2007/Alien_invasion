@@ -80,13 +80,16 @@ class AlienInvasion:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            elif event.type==pygame.KEYDOWN:
-                self._check_keydown_events(event)
+
             elif event.type==pygame.KEYUP:
                 self._check_keyup_events(event)
             elif event.type==pygame.MOUSEBUTTONDOWN:
                 mouse_pos=pygame.mouse.get_pos()
                 self._check_mouse_pos(mouse_pos) 
+
+            if self.game_active:
+                if event.type==pygame.KEYDOWN:
+                    self._check_keydown_events(event)
 
     def _check_mouse_pos(self,mouse_pos):
         """Star a new game when the player hits play"""
@@ -98,6 +101,7 @@ class AlienInvasion:
         self.stats.reset_settings()
         self.sb.prep_score()
         self.sb.prep_level()
+        self.sb.prep_ships()
         self.settings.initialize_dynamic_settings()
         self.game_active=True
 
@@ -122,8 +126,6 @@ class AlienInvasion:
             sys.exit()
         elif event.key==pygame.K_SPACE:
             self._fire_bullet()
-        elif event.key==pygame.K_p:
-            self._start_game()
         
     def _check_keyup_events(self,event):
         """Deal with key releases"""
@@ -248,6 +250,7 @@ class AlienInvasion:
         if self.stats.ships_left>0:
             #Decrement the number of ships left
             self.stats.ships_left-=1
+            self.sb.prep_ships()
 
             #Remove the bullets and aliens
             self.bullets.empty()
