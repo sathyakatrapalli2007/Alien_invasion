@@ -14,6 +14,7 @@ class ScoreBoard:
 
         self.prep_score()
         self.prep_highscore()
+        self.prep_level()
 
     def prep_score(self):
         """Turn the rounded score into an image"""
@@ -37,7 +38,17 @@ class ScoreBoard:
         self.highrect=self.score_image.get_rect()
         self.highrect.midtop=self.screen_rect.midtop
 
+    def prep_level(self):
+        """Turn the level into an image"""
+        level_str=str(self.stats.level)
+        self.level_image=self.font.render(level_str,True,self.text_colour,
+                                            self.settings.bg_color)
+        self.level_rect=self.level_image.get_rect()
+        self.level_rect.right=self.rect.right
+        self.level_rect.top=self.rect.bottom-10
+
     def check_high_score(self):
+        """Checks if the highscore needs to be updated"""
         if self.stats.score>self.stats.high_score:
             self.stats.high_score=self.stats.score
             self.prep_highscore()
@@ -47,5 +58,6 @@ class ScoreBoard:
         """Draw score to screen"""
         self.screen.blit(self.score_image,self.rect)
         self.screen.blit(self.high_score_image,self.highrect)
+        self.screen.blit(self.level_image,self.level_rect)
 
 

@@ -96,7 +96,8 @@ class AlienInvasion:
     def _start_game(self):
         """Reset everything and start game"""
         self.stats.reset_settings()
-        self.score.prep_score()
+        self.sb.prep_score()
+        self.sb.prep_level()
         self.settings.initialize_dynamic_settings()
         self.game_active=True
 
@@ -177,11 +178,15 @@ class AlienInvasion:
                 self.stats.score+=self.settings.alien_points*len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
+
         #Generate a new fleet when the old one dies
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
             self.settings.speed_up()
+
+            self.stats.level+=1
+            self.sb.prep_level()
 
 
 
