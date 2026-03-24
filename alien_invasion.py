@@ -86,10 +86,9 @@ class AlienInvasion:
             elif event.type==pygame.MOUSEBUTTONDOWN:
                 mouse_pos=pygame.mouse.get_pos()
                 self._check_mouse_pos(mouse_pos) 
-
-            if self.game_active:
-                if event.type==pygame.KEYDOWN:
-                    self._check_keydown_events(event)
+            elif event.type==pygame.KEYDOWN:
+                self._check_keydown_events(event)
+            
 
     def _check_mouse_pos(self,mouse_pos):
         """Star a new game when the player hits play"""
@@ -126,6 +125,16 @@ class AlienInvasion:
             sys.exit()
         elif event.key==pygame.K_SPACE:
             self._fire_bullet()
+        elif event.key==pygame.K_s:
+            self._take_screenshot()
+
+    def _take_screenshot(self):
+        """Takes a screenshot and saves to file"""
+        screenshot_count=1
+        filename=f"screenshots/screenshot_{screenshot_count}.png"
+        pygame.image.save(self.screen,filename)
+        screenshot_count+=1
+
         
     def _check_keyup_events(self,event):
         """Deal with key releases"""
