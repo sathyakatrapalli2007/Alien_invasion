@@ -19,6 +19,9 @@ from button import Button
 
 from scoreboard import ScoreBoard
 
+from pathlib import Path
+import json
+
 class AlienInvasion:
     """Creating a class that would manage all game attributes"""
     def __init__(self):
@@ -272,7 +275,15 @@ class AlienInvasion:
             #pause the game
             sleep(1)
         else:
+
+
             self.game_active=False
+
+            path=Path("highscore.json")
+            contents=json.dumps(self.stats.high_score)
+            path.write_text(contents)
+            self.sb.prep_highscore()
+
             pygame.mouse.set_visible(True)
 
     def _check_alien_bottom(self):

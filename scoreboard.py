@@ -2,6 +2,9 @@ import pygame.font
 from ship import Ship
 from pygame.sprite import Group
 
+from pathlib import Path
+import json
+
 class ScoreBoard:
     """A class to report scores"""
     def __init__(self,ai_game):
@@ -14,6 +17,10 @@ class ScoreBoard:
 
         self.font=pygame.font.SysFont("consolas",48)
         self.text_colour=(180,0,100)
+
+        path=Path("highscore.json")
+        contents=path.read_text()
+        self.stats.high_score=json.loads(contents)
 
         self.prep_score()
         self.prep_highscore()
@@ -33,6 +40,8 @@ class ScoreBoard:
 
     def prep_highscore(self):
         """Turn the highscore into an image"""
+
+
         rounded_highscore=round(self.stats.high_score,-1)
         self.highscore_str=f"{rounded_highscore:,}"
 
@@ -52,14 +61,15 @@ class ScoreBoard:
         self.level_rect.top=self.rect.bottom-10
 
     def check_high_score(self):
-        """Checks if the highscore needs to be updated"""
+        """Checks if the highscore needs to be updated after loading the highscore"""
+
         if self.stats.score>self.stats.high_score:
             self.stats.high_score=self.stats.score
             self.prep_highscore()
 
     def prep_ships(self):
         self.ships=Group()
-        for ship_count in range(self.stats.ships_left):
+        for ship_count in range(self.stats.ships_left+1):
             new_ship=Ship(self.ai_game)
             new_ship.rect.x=10+ship_count*new_ship.rect.width
             new_ship.rect.y=10

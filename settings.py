@@ -14,7 +14,7 @@ class Settings:
         self.bullets_allowed=5
 
         #Alien Settings
-        self.fleet_dropdown_speed=10
+        self.fleet_dropdown_speed=30
         
         self.increase_speed=1.1
         self.score_scale=1.5
