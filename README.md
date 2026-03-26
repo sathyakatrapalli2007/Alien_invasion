@@ -71,17 +71,15 @@ shots = [1, 0, 1, 1, 0, ...]  # 1 = hit, 0 = miss
 
 accuracy = sum(shots) / len(shots)
 
-if accuracy > HIGH_THRESHOLD:
-    alien_speed += SPEED_STEP
-elif accuracy < LOW_THRESHOLD:
-    alien_speed -= SPEED_STEP
+if N==15 and COOL_DOWN_PASSED:
+    if accuracy > HIGH_THRESHOLD:
+        alien_speed += SPEED_STEP
+    elif accuracy < LOW_THRESHOLD:
+        alien_speed -= SPEED_STEP
 
 # Stability controls
 alien_speed = clamp(alien_speed, MIN_SPEED, MAX_SPEED)
 
-# Cooldown prevents frequent changes
-if cooldown_active:
-    skip_adjustment()
 ```
 
 **Key Ideas:**
