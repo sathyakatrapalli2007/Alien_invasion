@@ -82,16 +82,22 @@ class AlienInvasion:
         self.ship_explosion_sound = pygame.mixer.Sound("sound_effects/ship_collision.wav")
         self.game_over=pygame.mixer.Sound("sound_effects/game_over.wav")
 
+        #screen shot count
+        path2=Path('screenshot_count.json')
+        contents=path2.read_text()
+        self.screenshot_count=json.loads(contents)
+
     def _play_music(self):
         """play the music when the game_state is not active"""
-        #play music
+        #plays music
         pygame.mixer.music.load('sound_effects/when_started.wav')
         pygame.mixer.music.play(-1)
 
     def _load_data(self):
-            path1=Path('data.json')
-            contents=path1.read_text()
-            self.game_data=json.loads(contents)
+        """loads the past games' data"""
+        path1=Path('data.json')
+        contents=path1.read_text()
+        self.game_data=json.loads(contents)
 
     def run_game(self):
         """Creating a loop that will update the screen"""
@@ -101,20 +107,15 @@ class AlienInvasion:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
-
-
             self._update_screen()
             #Keeps consistent framerate by ticking once through a loop
             self.clock.tick(60)
-
-
 
     def _check_events(self):
         """Checks for user input and responds accordingly"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-
             elif event.type==pygame.KEYUP:
                 self._check_keyup_events(event)
             elif event.type==pygame.MOUSEBUTTONDOWN:
@@ -131,19 +132,31 @@ class AlienInvasion:
 
     def _start_game(self):
         """Reset everything and start game"""
+        #reset settings
         self.stats.reset_settings()
+
+        #prep score board
         self.sb.prep_score()
         self.sb.prep_level()
         self.sb.prep_ships()
+
+        #initialise game speed
         self.settings.initialize_dynamic_settings()
         self._set_starting_speed()
+
+        #initialize current stats aftre every game
         self.shots_last_taken = 0
         self.current_stats = []
+
+        #make the game active
         self.game_active=True
+
+        #switch tracks when game starts
         pygame.mixer.music.stop()
         pygame.mixer.music.fadeout(500)
         pygame.mixer.music.load("sound_effects/while_playing.wav")
         pygame.mixer.music.play(-1)
+
         #Clear all bullets and aliens
         self.bullets.empty()
         self.aliens.empty()
@@ -183,10 +196,9 @@ class AlienInvasion:
 
     def _take_screenshot(self):
         """Takes a screenshot and saves to file"""
-        screenshot_count=1
-        filename=f"screenshots/screenshot_{screenshot_count}.png"
+        filename=f"screenshots/screenshot_{self.screenshot_count}.png"
         pygame.image.save(self.screen,filename)
-        screenshot_count+=1
+        self.screenshot_count+=1
 
         
     def _check_keyup_events(self,event):
@@ -214,8 +226,6 @@ class AlienInvasion:
         if not self.game_active:
             self.play_button.blitme()
 
-
-
         #Draws new screen
         pygame.display.flip()
 
@@ -224,6 +234,7 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet=Bullet(self)
             self.bullets.add(new_bullet)
+            #count number of bullets fired
             self.stats.bullet_count+=1
 
         self.bullet_sound.play()            
@@ -233,10 +244,13 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom<=0:
                 self.bullets.remove(bullet) 
+                #when the bullet misses then update current stats as 0 
+                #while maintaining the same length
                 if len(self.current_stats)>15:
                     self.current_stats.pop(0)
                 self.current_stats.append(0)
 
+                #count the shots last countes since the last update
                 self.shots_last_taken+=1
                 self._analyse_past_shots()
 
@@ -251,8 +265,15 @@ class AlienInvasion:
         if self.collisions:
             for aliens in self.collisions.values():
                 self.stats.score+=self.settings.alien_points*len(aliens)
+
+                #count hits
                 self.stats.hits+=len(aliens)
+
+                #play the sound effect
                 self.alien_colliosion_sound.play()
+
+                #when the bullet misses then update current stats as 0 
+                #while maintaining the same length
                 if len(self.current_stats)>15:
                     self.current_stats.pop(0)
                 self.current_stats.append(1)
@@ -263,22 +284,22 @@ class AlienInvasion:
             self.sb.prep_score()
             self.sb.check_high_score()
 
-
         #Generate a new fleet when the old one dies
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
-            #self.settings.speed_up()
+            self.settings.speed_up()
 
             self.stats.level+=1
             self.sb.prep_level()
 
 
     def _analyse_past_shots(self):
+        """Analyse the past 15 shots and take decisions"""
         if self.current_stats:
             accuracy=sum(self.current_stats)/len(self.current_stats)
         
-        if len(self.current_stats)>=10 and self.shots_last_taken>=6:
+        if len(self.current_stats)==15 and self.shots_last_taken>=6:
             if accuracy>=0.7:
                 self.shots_last_taken=0
                 self.settings.alien_speed*=1.04
@@ -286,6 +307,7 @@ class AlienInvasion:
                 self.shots_last_taken=0
                 self.settings.alien_speed*=0.96
 
+        #set speed guardrails
         if self.settings.alien_speed < 0.5:
             self.settings.alien_speed = 0.5
         elif self.settings.alien_speed > 2.5:
@@ -359,6 +381,7 @@ class AlienInvasion:
             self._create_fleet()
             self.ship.center_ship()
 
+            #play the sound effect
             self.ship_explosion_sound.play()
 
             #pause the game
@@ -366,20 +389,31 @@ class AlienInvasion:
         else:
             self.game_active=False
 
+            #load the high score
             path=Path("highscore.json")
             contents=json.dumps(self.stats.high_score)
             path.write_text(contents)
+
+            #prep the highscore
             self.sb.prep_highscore()
 
+            #save the game stats for future analysis
             self._save_data()
 
+            #save_screen_shot_count
+            path2=Path("screenshot_count.json")
+            contents=json.dumps(self.game_data)
+            path2.write_text(contents)
+
+            #make cursor visible
             pygame.mouse.set_visible(True)
 
+            #switch music tracks
             pygame.mixer.music.stop()
-        
             self.game_over.play()
             pygame.mixer.music.fadeout(500)
             self._play_music()
+
     def _save_data(self):
             path1=Path("data.json")
             self.current_game_data["shots_fired"]=self.stats.bullet_count
@@ -388,8 +422,6 @@ class AlienInvasion:
             self.game_data.append(self.current_game_data)
             contents=json.dumps(self.game_data)
             path1.write_text(contents)
-
-
 
     def _check_alien_bottom(self):
         """Check if alien reaches the bottom of screen"""
