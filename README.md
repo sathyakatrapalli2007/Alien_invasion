@@ -71,19 +71,17 @@ This game includes a **two-level adaptive difficulty system**:
 * **Mouse Click** → Start game
 
 ---
-📸 Screenshot Feature
+## 📸 Screenshot Feature
 
-The game includes a built-in screenshot system for capturing gameplay moments.
-
-🕹️ How to Use
-Press S during gameplay to take a screenshot
-Screenshots are saved automatically
-
-💾 Storage
-Saved in the screenshots/ folder
+- **Take Screenshots:**  
+  Press the **S** key during gameplay to instantly capture the current game screen.
+- **Automatic Saving:**  
+  Screenshots are saved in the `screenshots/` folder, named sequentially (e.g., `screenshot_1.png`, `screenshot_2.png`, ...).
+- **Easy Sharing:**  
+  Use these images to share your high scores or memorable moments!
 
 Files are named sequentially:
-
+```
 screenshot_1.png
 screenshot_2.png
 screenshot_3.png
@@ -97,31 +95,6 @@ screenshot_3.png
 ---
 
 ## 📁 Project Structure
-
-```
-## 📸 Screenshot Feature
-
-- **Take Screenshots:**  
-  Press the **S** key during gameplay to instantly capture the current game screen.
-- **Automatic Saving:**  
-  Screenshots are saved in the `screenshots/` folder, named sequentially (e.g., `screenshot_1.png`, `screenshot_2.png`, ...).
-- **Easy Sharing:**  
-  Use these images to share your high scores or memorable moments!
-
----
-
-## 🔊 Sound Effects & Music
-
-- **Background Music:**  
-  - Plays a looping track (`when_started.wav`) on the main menu.
-  - Switches to a different track (`while_playing.wav`) during gameplay.
-- **Sound Effects:**  
-  - **Bullet Fired:** Plays `shot_fired.wav` when you shoot.
-  - **Alien Hit:** Plays `alien_collision.wav` when an alien is destroyed.
-  - **Ship Hit:** Plays `ship_collision.wav` when your ship is hit.
-  - **Game Over:** Plays `game_over.wav` when the game ends.
-- All sound files are stored in the `sound_effects/` folder.
-
 ---
 alien_invasion/
 │
@@ -136,6 +109,17 @@ alien_invasion/
 └── sound_effects/
 ```
 
+## 🔊 Sound Effects & Music
+
+- **Background Music:**  
+  - Plays a looping track (`when_started.wav`) on the main menu.
+  - Switches to a different track (`while_playing.wav`) during gameplay.
+- **Sound Effects:**  
+  - **Bullet Fired:** Plays `shot_fired.wav` when you shoot.
+  - **Alien Hit:** Plays `alien_collision.wav` when an alien is destroyed.
+  - **Ship Hit:** Plays `ship_collision.wav` when your ship is hit.
+  - **Game Over:** Plays `game_over.wav` when the game ends.
+- All sound files are stored in the `sound_effects/` folder.
 ---
 
 ## ⚙️ Installation and Setup
