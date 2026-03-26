@@ -69,7 +69,12 @@ class AlienInvasion:
         self.current_game_data={}
         self._load_data()
 
+        #playing game music
         self._play_music()
+
+        #set current stats
+        self.current_stats=[]
+        self.shots_last_taken=0
 
         #loading sounds
         self.bullet_sound = pygame.mixer.Sound("sound_effects/shot_fired.wav")
@@ -78,13 +83,10 @@ class AlienInvasion:
         self.game_over=pygame.mixer.Sound("sound_effects/game_over.wav")
 
     def _play_music(self):
-        if not self.game_active:
-            #play music
-            pygame.mixer.music.load('sound_effects/when_started.wav')
-            pygame.mixer.music.play(-1)
-
-            
-
+        """play the music when the game_state is not active"""
+        #play music
+        pygame.mixer.music.load('sound_effects/when_started.wav')
+        pygame.mixer.music.play(-1)
 
     def _load_data(self):
             path1=Path('data.json')
@@ -134,6 +136,9 @@ class AlienInvasion:
         self.sb.prep_level()
         self.sb.prep_ships()
         self.settings.initialize_dynamic_settings()
+        self._set_starting_speed()
+        self.shots_last_taken = 0
+        self.current_stats = []
         self.game_active=True
         pygame.mixer.music.stop()
         pygame.mixer.music.fadeout(500)
@@ -149,6 +154,19 @@ class AlienInvasion:
 
         #Hide the mouse pointer
         pygame.mouse.set_visible(False)
+
+    def _set_starting_speed(self):
+        """Analyse past 5 games data to set initial speed"""
+        sum_accu=0
+        game_data_available=self.game_data[:5]
+        for data in game_data_available:
+                sum_accu+=data["accuracy"]
+        avg_accu=sum_accu/len(game_data_available)
+
+        if avg_accu>0.7:
+            self.settings.alien_speed*=1.03
+        elif avg_accu<0.5:
+            self.settings.alien_speed*=0.97
 
     def _check_keydown_events(self,event):
         """Deal with Key presses"""
@@ -214,7 +232,13 @@ class AlienInvasion:
         self.bullets.update()
         for bullet in self.bullets.copy():
             if bullet.rect.bottom<=0:
-                self.bullets.remove(bullet)  
+                self.bullets.remove(bullet) 
+                if len(self.current_stats)>15:
+                    self.current_stats.pop(0)
+                self.current_stats.append(0)
+
+                self.shots_last_taken+=1
+                self._analyse_past_shots()
 
         self._check_bullet_alien_collisions()
 
@@ -229,7 +253,13 @@ class AlienInvasion:
                 self.stats.score+=self.settings.alien_points*len(aliens)
                 self.stats.hits+=len(aliens)
                 self.alien_colliosion_sound.play()
+                if len(self.current_stats)>15:
+                    self.current_stats.pop(0)
+                self.current_stats.append(1)
 
+                self.shots_last_taken+=1
+                self._analyse_past_shots()
+  
             self.sb.prep_score()
             self.sb.check_high_score()
 
@@ -238,12 +268,28 @@ class AlienInvasion:
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
-            self.settings.speed_up()
+            #self.settings.speed_up()
 
             self.stats.level+=1
             self.sb.prep_level()
 
 
+    def _analyse_past_shots(self):
+        if self.current_stats:
+            accuracy=sum(self.current_stats)/len(self.current_stats)
+        
+        if len(self.current_stats)>=10 and self.shots_last_taken>=6:
+            if accuracy>=0.7:
+                self.shots_last_taken=0
+                self.settings.alien_speed*=1.04
+            elif accuracy<=0.5:
+                self.shots_last_taken=0
+                self.settings.alien_speed*=0.96
+
+        if self.settings.alien_speed < 0.5:
+            self.settings.alien_speed = 0.5
+        elif self.settings.alien_speed > 2.5:
+            self.settings.alien_speed = 2.5
 
     def _create_fleet(self):
         """Creates alien fleets"""
@@ -338,6 +384,7 @@ class AlienInvasion:
             path1=Path("data.json")
             self.current_game_data["shots_fired"]=self.stats.bullet_count
             self.current_game_data["hits"]=self.stats.hits
+            self.current_game_data["accuracy"]=self.stats.hits/self.stats.bullet_count
             self.game_data.append(self.current_game_data)
             contents=json.dumps(self.game_data)
             path1.write_text(contents)

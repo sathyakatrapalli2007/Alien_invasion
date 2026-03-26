@@ -13,5 +13,6 @@ class GameStats:
         self.level=1
         self.bullet_count=0
         self.hits=0
+   
 
 

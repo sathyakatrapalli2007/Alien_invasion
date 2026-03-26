@@ -1,1 +1,1 @@
-[{"shots_fired": 48, "hits": 45}, {"shots_fired": 3, "hits": 3}, {"shots_fired": 15, "hits": 13}, {"shots_fired": 87, "hits": 81}, {"shots_fired": 3, "hits": 3}, {"shots_fired": 0, "hits": 0}]
+[{"shots_fired": 48, "hits": 45,"accuracy":0.9375}, {"shots_fired": 3, "hits": 3,"accuracy":1.0}, {"shots_fired": 15, "hits": 13,"accuracy":0.8666}, {"shots_fired": 87, "hits": 81,"accuracy":0.9310}, {"shots_fired": 3, "hits": 3,"accuracy":1.0}]
