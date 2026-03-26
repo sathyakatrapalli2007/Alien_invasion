@@ -1,7 +1,3 @@
-Good decision—this is exactly the kind of small addition that creates disproportionate impact.
-
-Here’s your **final README with a clean, minimal, high-signal “Adaptive Logic” section added** (no fluff, no overengineering, just enough to prove depth):
-
 ---
 
 # 🚀 Alien Invasion
