@@ -73,11 +73,11 @@ This game includes a **two-level adaptive difficulty system**:
 ---
 ## 📸 Screenshot Feature
 
-- **Take Screenshots:**  
+* **Take Screenshots:**  
   Press the **S** key during gameplay to instantly capture the current game screen.
-- **Automatic Saving:**  
+* **Automatic Saving:**  
   Screenshots are saved in the `screenshots/` folder, named sequentially (e.g., `screenshot_1.png`, `screenshot_2.png`, ...).
-- **Easy Sharing:**  
+* **Easy Sharing:**  
   Use these images to share your high scores or memorable moments!
 
 Files are named sequentially:
@@ -87,12 +87,12 @@ screenshot_2.png
 screenshot_3.png
 ...
 ```
-
+---
 ## 🛠️ Technologies Used
-
+```
 * Python 3
 * Pygame
-
+```
 ---
 
 ## 📁 Project Structure
@@ -109,18 +109,19 @@ alien_invasion/
 ├── images/
 └── sound_effects/
 ```
-
+---
 ## 🔊 Sound Effects & Music
 ```
-- **Background Music:**  
+* **Background Music:**  
   - Plays a looping track (`when_started.wav`) on the main menu.
   - Switches to a different track (`while_playing.wav`) during gameplay.
-- **Sound Effects:**  
+* **Sound Effects:**  
   - **Bullet Fired:** Plays `shot_fired.wav` when you shoot.
   - **Alien Hit:** Plays `alien_collision.wav` when an alien is destroyed.
   - **Ship Hit:** Plays `ship_collision.wav` when your ship is hit.
   - **Game Over:** Plays `game_over.wav` when the game ends.
-- All sound files are stored in the `sound_effects/` folder.
+* All sound files are stored in the `sound_effects/` folder.
+```
 ---
 
 ## ⚙️ Installation and Setup
@@ -139,36 +140,26 @@ python alien_invasion.py
 
 ---
 
-## 📸 Screenshots
-
-### Gameplay
-
-*Add your gameplay screenshot here*
-
-### Adaptive Difficulty in Action
-
-*Add screenshot showing gameplay at different difficulty levels*
-
----
-
 ## 🚧 Future Enhancements
+```
 
 * Power-ups and special abilities
 * Multiple enemy types
 * Better UI/UX
 * Difficulty visualization/debug panel
-
+```
 ---
 
 ## 🙏 Acknowledgements
-
+```
 * Based on *Python Crash Course* by Eric Matthes
 * Built using the Pygame library
-
+```
 ---
 
 ## 📌 Status
-
+```
 Core game complete.
 Adaptive difficulty system implemented.
 Further improvements and experimentation ongoing.
+```
