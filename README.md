@@ -214,6 +214,3 @@ This project focuses on **bridging game development with intelligent systems** b
 * Simulate **feedback-driven systems similar to early ML concepts**
 
 ---
-
-
-If you want next: I can help you turn this into a **GitHub project that actually gets noticed (README + commits + demo strategy)**.
