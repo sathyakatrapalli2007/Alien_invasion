@@ -86,6 +86,7 @@ screenshot_1.png
 screenshot_2.png
 screenshot_3.png
 ...
+```
 
 ## 🛠️ Technologies Used
 
@@ -95,7 +96,7 @@ screenshot_3.png
 ---
 
 ## 📁 Project Structure
----
+```
 alien_invasion/
 │
 ├── alien_invasion.py
@@ -110,7 +111,7 @@ alien_invasion/
 ```
 
 ## 🔊 Sound Effects & Music
-
+```
 - **Background Music:**  
   - Plays a looping track (`when_started.wav`) on the main menu.
   - Switches to a different track (`while_playing.wav`) during gameplay.
