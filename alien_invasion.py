@@ -27,6 +27,7 @@ class AlienInvasion:
     def __init__(self):
         """Creating a game object"""
         pygame.init()
+        pygame.mixer.init()
         #Create a Settings instance
         self.settings=Settings()
 
@@ -68,6 +69,23 @@ class AlienInvasion:
         self.current_game_data={}
         self._load_data()
 
+        self._play_music()
+
+        #loading sounds
+        self.bullet_sound = pygame.mixer.Sound("sound_effects/shot_fired.wav")
+        self.alien_colliosion_sound = pygame.mixer.Sound("sound_effects/alien_collision.wav")
+        self.ship_explosion_sound = pygame.mixer.Sound("sound_effects/ship_collision.wav")
+        self.game_over=pygame.mixer.Sound("sound_effects/game_over.wav")
+
+    def _play_music(self):
+        if not self.game_active:
+            #play music
+            pygame.mixer.music.load('sound_effects/when_started.wav')
+            pygame.mixer.music.play(-1)
+
+            
+
+
     def _load_data(self):
             path1=Path('data.json')
             contents=path1.read_text()
@@ -81,6 +99,8 @@ class AlienInvasion:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
+
+
             self._update_screen()
             #Keeps consistent framerate by ticking once through a loop
             self.clock.tick(60)
@@ -115,7 +135,10 @@ class AlienInvasion:
         self.sb.prep_ships()
         self.settings.initialize_dynamic_settings()
         self.game_active=True
-
+        pygame.mixer.music.stop()
+        pygame.mixer.music.fadeout(500)
+        pygame.mixer.music.load("sound_effects/while_playing.wav")
+        pygame.mixer.music.play(-1)
         #Clear all bullets and aliens
         self.bullets.empty()
         self.aliens.empty()
@@ -172,6 +195,9 @@ class AlienInvasion:
         #Draws the button only when game is inactive
         if not self.game_active:
             self.play_button.blitme()
+
+
+
         #Draws new screen
         pygame.display.flip()
 
@@ -181,7 +207,8 @@ class AlienInvasion:
             new_bullet=Bullet(self)
             self.bullets.add(new_bullet)
             self.stats.bullet_count+=1
-            
+
+        self.bullet_sound.play()            
     def _update_bullets(self):
         """Update the location of the bullet and get rid of old bullets"""
         self.bullets.update()
@@ -201,8 +228,11 @@ class AlienInvasion:
             for aliens in self.collisions.values():
                 self.stats.score+=self.settings.alien_points*len(aliens)
                 self.stats.hits+=len(aliens)
+                self.alien_colliosion_sound.play()
+
             self.sb.prep_score()
             self.sb.check_high_score()
+
 
         #Generate a new fleet when the old one dies
         if not self.aliens:
@@ -283,6 +313,8 @@ class AlienInvasion:
             self._create_fleet()
             self.ship.center_ship()
 
+            self.ship_explosion_sound.play()
+
             #pause the game
             sleep(1)
         else:
@@ -296,7 +328,12 @@ class AlienInvasion:
             self._save_data()
 
             pygame.mouse.set_visible(True)
+
+            pygame.mixer.music.stop()
         
+            self.game_over.play()
+            pygame.mixer.music.fadeout(500)
+            self._play_music()
     def _save_data(self):
             path1=Path("data.json")
             self.current_game_data["shots_fired"]=self.stats.bullet_count
