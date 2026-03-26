@@ -11,4 +11,7 @@ class GameStats:
         self.ships_left=self.settings.ship_limit-1
         self.score=0
         self.level=1
+        self.bullet_count=0
+        self.hits=0
+
 

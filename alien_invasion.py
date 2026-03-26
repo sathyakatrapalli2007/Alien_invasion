@@ -63,6 +63,15 @@ class AlienInvasion:
         #Set the button
         self.play_button=Button(self,"PLAY")
 
+        #loading game_data
+        self.game_data=[]
+        self.current_game_data={}
+        self._load_data()
+
+    def _load_data(self):
+            path1=Path('data.json')
+            contents=path1.read_text()
+            self.game_data=json.loads(contents)
 
     def run_game(self):
         """Creating a loop that will update the screen"""
@@ -171,6 +180,7 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet=Bullet(self)
             self.bullets.add(new_bullet)
+            self.stats.bullet_count+=1
             
     def _update_bullets(self):
         """Update the location of the bullet and get rid of old bullets"""
@@ -184,12 +194,13 @@ class AlienInvasion:
     def _check_bullet_alien_collisions(self):
         """Check if there are any collisions and regenerates fleet if all aliens are shot down"""
         #check for any bullets that hit the alien and get rid of them
-        collisions=pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
-
+        self.collisions=pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
+        
         #update score
-        if collisions:
-            for aliens in collisions.values():
+        if self.collisions:
+            for aliens in self.collisions.values():
                 self.stats.score+=self.settings.alien_points*len(aliens)
+                self.stats.hits+=len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
 
@@ -275,8 +286,6 @@ class AlienInvasion:
             #pause the game
             sleep(1)
         else:
-
-
             self.game_active=False
 
             path=Path("highscore.json")
@@ -284,7 +293,19 @@ class AlienInvasion:
             path.write_text(contents)
             self.sb.prep_highscore()
 
+            self._save_data()
+
             pygame.mouse.set_visible(True)
+        
+    def _save_data(self):
+            path1=Path("data.json")
+            self.current_game_data["shots_fired"]=self.stats.bullet_count
+            self.current_game_data["hits"]=self.stats.hits
+            self.game_data.append(self.current_game_data)
+            contents=json.dumps(self.game_data)
+            path1.write_text(contents)
+
+
 
     def _check_alien_bottom(self):
         """Check if alien reaches the bottom of screen"""
