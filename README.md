@@ -160,8 +160,6 @@ alien_invasion/
 ├── images/
 └── sound_effects/
 ```
-<<<<<<< HEAD
-=======
 
 
 ```
@@ -189,7 +187,6 @@ alien_invasion/
 - All sound files are stored in the `sound_effects/` folder.
 
 ---
->>>>>>> 0d7c128 (Made changes so that the current stats reset after each completed game)
 
 
 ## ⚙️ Installation and Setup

@@ -13,6 +13,12 @@ class GameStats:
         self.level=1
         self.bullet_count=0
         self.hits=0
+
+        #reset current stats
+        self.current_stats=[]
+        self.shots_last_taken=0
+        self.current_game_data={}
+    
    
 
 

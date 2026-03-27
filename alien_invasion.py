@@ -66,15 +66,11 @@ class AlienInvasion:
 
         #loading game_data
         self.game_data=[]
-        self.current_game_data={}
+
         self._load_data()
 
         #playing game music
         self._play_music()
-
-        #set current stats
-        self.current_stats=[]
-        self.shots_last_taken=0
 
         #loading sounds
         self.bullet_sound = pygame.mixer.Sound("sound_effects/shot_fired.wav")
@@ -115,6 +111,8 @@ class AlienInvasion:
         """Checks for user input and responds accordingly"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self._save_highscore()
+                self._save_screenshot_count()
                 sys.exit()
             elif event.type==pygame.KEYUP:
                 self._check_keyup_events(event)
@@ -144,10 +142,6 @@ class AlienInvasion:
         self.settings.initialize_dynamic_settings()
         self._set_starting_speed()
 
-        #initialize current stats aftre every game
-        self.shots_last_taken = 0
-        self.current_stats = []
-
         #make the game active
         self.game_active=True
 
@@ -176,10 +170,11 @@ class AlienInvasion:
                 sum_accu+=data["accuracy"]
         avg_accu=sum_accu/len(game_data_available)
 
-        if avg_accu>0.7:
-            self.settings.alien_speed*=1.03
-        elif avg_accu<0.5:
-            self.settings.alien_speed*=0.97
+        if len(game_data_available)>=5:
+            if avg_accu>0.7:
+                self.settings.alien_speed*=1.03
+            elif avg_accu<0.5:
+                self.settings.alien_speed*=0.97
 
     def _check_keydown_events(self,event):
         """Deal with Key presses"""
@@ -188,6 +183,8 @@ class AlienInvasion:
         elif event.key==pygame.K_LEFT:
              self.ship.moving_left=True
         elif event.key==pygame.K_ESCAPE:
+            self._save_highscore()
+            self._save_screenshot_count()
             sys.exit()
         elif event.key==pygame.K_SPACE:
             self._fire_bullet()
@@ -274,11 +271,11 @@ class AlienInvasion:
 
                 #when the bullet misses then update current stats as 0 
                 #while maintaining the same length
-                if len(self.current_stats)>15:
-                    self.current_stats.pop(0)
-                self.current_stats.append(1)
+                if len(self.stats.current_stats)>15:
+                    self.stats.current_stats.pop(0)
+                self.stats.current_stats.append(1)
 
-                self.shots_last_taken+=1
+                self.stats.shots_last_taken+=1
                 self._analyse_past_shots()
   
             self.sb.prep_score()
@@ -288,7 +285,7 @@ class AlienInvasion:
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
-            self.settings.speed_up()
+            #self.settings.speed_up()
 
             self.stats.level+=1
             self.sb.prep_level()
@@ -299,12 +296,12 @@ class AlienInvasion:
         if self.current_stats:
             accuracy=sum(self.current_stats)/len(self.current_stats)
         
-        if len(self.current_stats)==15 and self.shots_last_taken>=6:
+        if len(self.stats.current_stats)==15 and self.stats.shots_last_taken>=6:
             if accuracy>=0.7:
-                self.shots_last_taken=0
+                self.stats.shots_last_taken=0
                 self.settings.alien_speed*=1.04
             elif accuracy<=0.5:
-                self.shots_last_taken=0
+                self.stats.shots_last_taken=0
                 self.settings.alien_speed*=0.96
 
         #set speed guardrails
@@ -389,10 +386,9 @@ class AlienInvasion:
         else:
             self.game_active=False
 
-            #load the high score
-            path=Path("highscore.json")
-            contents=json.dumps(self.stats.high_score)
-            path.write_text(contents)
+            #dump the high score
+            self._save_highscore()
+
 
             #prep the highscore
             self.sb.prep_highscore()
@@ -401,9 +397,8 @@ class AlienInvasion:
             self._save_data()
 
             #save_screen_shot_count
-            path2=Path("screenshot_count.json")
-            contents=json.dumps(self.game_data)
-            path2.write_text(contents)
+            self._save_screenshot_count()
+
 
             #make cursor visible
             pygame.mouse.set_visible(True)
@@ -416,12 +411,22 @@ class AlienInvasion:
 
     def _save_data(self):
             path1=Path("data.json")
-            self.current_game_data["shots_fired"]=self.stats.bullet_count
-            self.current_game_data["hits"]=self.stats.hits
-            self.current_game_data["accuracy"]=self.stats.hits/self.stats.bullet_count
+            self.stats.current_game_data["shots_fired"]=self.stats.bullet_count
+            self.stats.current_game_data["hits"]=self.stats.hits
+            self.stats.current_game_data["accuracy"]=self.stats.hits/self.stats.bullet_count
             self.game_data.append(self.current_game_data)
             contents=json.dumps(self.game_data)
             path1.write_text(contents)
+    
+    def _save_screenshot_count(self):
+        path2=Path("screenshot_count.json")
+        contents=json.dumps(self.screenshot_count)
+        path2.write_text(contents)
+
+    def _save_highscore(self):
+        path=Path("highscore.json")
+        contents=json.dumps(self.stats.high_score)
+        path.write_text(contents)
 
     def _check_alien_bottom(self):
         """Check if alien reaches the bottom of screen"""

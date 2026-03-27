@@ -18,9 +18,9 @@ class Button:
         self.rect=pygame.Rect(0,0,self.width,self.height)
         self.rect.center=self.screen_rect.center
 
-        self._prep_msg(msg)
+        self._prep_messege(msg)
 
-    def _prep_msg(self,msg):
+    def _prep_messege(self,msg):
         """Render the font image"""
         self.font_image=self.font.render(msg,True,self.text_color,self.button_color)
         self.font_image_rect=self.font_image.get_rect()
