@@ -160,8 +160,37 @@ alien_invasion/
 ├── images/
 └── sound_effects/
 ```
+<<<<<<< HEAD
+=======
+
+
+```
+## 📸 Screenshot Feature
+
+- **Take Screenshots:**  
+  Press the **S** key during gameplay to instantly capture the current game screen.
+- **Automatic Saving:**  
+  Screenshots are saved in the `screenshots/` folder, named sequentially (e.g., `screenshot_1.png`, `screenshot_2.png`, ...).
+- **Easy Sharing:**  
+  Use these images to share your high scores or memorable moments!
 
 ---
+
+## 🔊 Sound Effects & Music
+
+- **Background Music:**  
+  - Plays a looping track (`when_started.wav`) on the main menu.
+  - Switches to a different track (`while_playing.wav`) during gameplay.
+- **Sound Effects:**  
+  - **Bullet Fired:** Plays `shot_fired.wav` when you shoot.
+  - **Alien Hit:** Plays `alien_collision.wav` when an alien is destroyed.
+  - **Ship Hit:** Plays `ship_collision.wav` when your ship is hit.
+  - **Game Over:** Plays `game_over.wav` when the game ends.
+- All sound files are stored in the `sound_effects/` folder.
+
+---
+>>>>>>> 0d7c128 (Made changes so that the current stats reset after each completed game)
+
 
 ## ⚙️ Installation and Setup
 
